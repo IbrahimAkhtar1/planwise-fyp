@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="./css/student.css">
+    <title>PlanWise | Student Dashboard</title>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <img src="./../../assets/images/logo.png" alt="PlanWise Logo" class="logo-img">
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active"><i class="bx bx-home"></i> Home</a></li>
+            </ul>
+            <button class="btn logout-btn">Logout</button>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header>
+                <h1>Welcome, Student!</h1>
+                <p>Let’s keep you on top of your exam schedule.</p>
+            </header>
+
+            <!-- Dashboard Sections -->
+            <section class="dashboard-section">
+                <div class="section-header">
+                    <h2>My Exams</h2>
+                </div>
+                <div class="exam-cards">
+                    <div class="exam-card" data-date="20th November" data-time="9:00 AM">
+                        <p><strong>Subject:</strong> Computer Vision</p>
+                        <p><strong>Date:</strong> 20th November</p>
+                        <p><strong>Time:</strong> 9:00 AM</p>
+                        <p><strong>Room:</strong> A1</p>
+                    </div>
+                    <div class="exam-card" data-date="22nd November" data-time="11:00 AM">
+                        <p><strong>Subject:</strong> Deep Learning</p>
+                        <p><strong>Date:</strong> 22nd November</p>
+                        <p><strong>Time:</strong> 11:00 AM</p>
+                        <p><strong>Room:</strong> B2</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Conflict Alerts Section -->
+            <section class="dashboard-section" id="conflict-alerts">
+                <div class="section-header">
+                    <h2>Exam Conflict Alerts</h2>
+                </div>
+                <div class="alert-box">
+                    <p id="conflictMessage">We found no conflicts in your schedule.</p>
+                    <button class="btn resolve-btn" id="resolveBtn" style="display:none;">Resolve Conflict</button>
+                </div>
+            </section>
+
+            <!-- Course Enrollment Section -->
+            <section class="dashboard-section">
+                <div class="section-header">
+                    <h2>Select Courses to Enroll</h2>
+                </div>
+                <label for="semesterSelect">Choose Your Semester:</label>
+                <select id="semesterSelect" onchange="displayCourses()">
+                    <option value="">Select Semester</option>
+                    <option value="1">Semester 1</option>
+                    <option value="2">Semester 2</option>
+                    <option value="3">Semester 3</option>
+                    <option value="4">Semester 4</option>
+                    <option value="5">Semester 5</option>
+                    <option value="6">Semester 6</option>
+                    <option value="7">Semester 7</option>
+                    <option value="8">Semester 8</option>
+                </select>
+
+                <form id="enrollForm" onsubmit="checkScheduleConflict(event)">
+                    <div class="course-list" id="courseList"></div>
+                    <input type="submit" class="btn enroll-btn" value="Enroll">
+                </form>
+
+                <div class="enrolled-courses">
+                    <h3>Enrolled Courses:</h3>
+                    <ul id="enrolledList"></ul>
+                </div>
+            </section>
+        </div>
+    </div>
+<script src="./js/data.js"></script>
+<script src="./js/student.js"></script>    
+</body>
+</html>
