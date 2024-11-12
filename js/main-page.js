@@ -72,9 +72,9 @@ function loginUser() {
 
             // Redirect based on identifier (numeric for student, string for admin)
             if (/^\d+$/.test(usernameOrId)) {
-                window.location.href = '/panels/students';  // Redirect to student dashboard
+                window.location.href = '/panels/students/index.html';  // Redirect to student dashboard
             } else {
-                window.location.href = '/panels/admin';  // Redirect to admin dashboard
+                window.location.href = '/panels/admin/index.html';  // Redirect to admin dashboard
             }
         } else {
             alert("Invalid credentials! Please try again.");
