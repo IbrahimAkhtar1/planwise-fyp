@@ -34,15 +34,16 @@ async function loginUser() {
       },
       body: JSON.stringify({ identifier, password }),
     });
+    console.log(response);
 
     if (response.ok) {
       const result = await response.json();
-      if(result.user.role === 'student'){
+      if (result.user.role == 3) {
         alert(`Welcome to Student Dashboard, ${result.user.name}!`);
-        window.location.href = '/dashboard/students';
-      }else if(result.user.role === 'teacher'){
+        window.location.href = "/dashboard/students";
+      } else if (result.user.role == 2) {
         alert(`Welcome to Admin Dashboard, ${result.user.name}!`);
-        window.location.href = '/dashboard/admin';
+        window.location.href = "/dashboard/admin";
       }
     } else {
       const error = await response.json();
@@ -60,7 +61,7 @@ async function registerUser(e) {
   const lastName = document.getElementById("register-lastname").value;
   const username = document.getElementById("register-username").value;
   const password = document.getElementById("register-password").value;
-
+  const role_id = 3;
   if (!firstName || !lastName || !username || !password) {
     alert("Please fill all fields.");
     return;
@@ -70,6 +71,7 @@ async function registerUser(e) {
     name: `${firstName} ${lastName}`,
     username: username,
     password: password,
+    role_id: role_id,
   };
 
   try {
@@ -83,16 +85,17 @@ async function registerUser(e) {
 
     if (request.ok) {
       const response = await request.json();
-      alert("User registered successfully!");
-      if(response.role === 'dashboard_student'){
-        alert(`Welcome to Student Dashboard, ${response.user.name}!`);
-      // Optionally redirect to the login form
-      window.location.href = '/dashboard/student'; 
-    }
-    else if (response.role === "dashboard_admin") {
-      alert(`Welcome to Admin Dashboard, ${response.user.name}!`);
-      window.location.href = "/dashboard/admin";
-    }
+
+      if (result.user.role === "student") {
+        alert(`Welcome to Student Dashboard, ${result.user.name}!`);
+        window.location.href = "/dashboard/students";
+      } else if (result.user.role === "admin") {
+        alert(`Welcome to Admin Dashboard, ${result.user.name}!`);
+        window.location.href = "/dashboard/admin";
+      } else {
+        alert("Unknown role. Please contact support.");
+      }
+
     } else {
       const errorText = await request.text();
       alert(`Failed to register: ${errorText}`);
