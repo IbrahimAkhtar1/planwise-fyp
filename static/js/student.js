@@ -101,8 +101,25 @@ document
   .addEventListener("click", () => {
     console.log("clicked logout");
 
+    // Remove user data from localStorage
     localStorage.removeItem("loggedInUser");
-    window.location.href = "/";
+
+    // Send a logout request to the server
+    fetch("/logout", {
+      method: "GET",
+      credentials: "same-origin", // Send cookies for the current domain (if needed)
+    })
+      .then((response) => {
+        if (response.ok) {
+          // Redirect to the homepage (sign-in page) after logging out
+          window.location.href = "/";
+        } else {
+          console.error("Logout failed");
+        }
+      })
+      .catch((error) => {
+        console.error("Error logging out:", error);
+      });
   });
 
 // Load and display the logged-in user's name on the dashboard

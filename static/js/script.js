@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const registerForm = document.getElementById("register-form");
 
   // Toggle between login and register forms
-  document.getElementById("toggle-auth")?.addEventListener("click", (e) => {
+document.getElementById("toggle-auth")?.addEventListener("click", (e) => {
     e.preventDefault();
     authContainer.style.display = "block";
     loginForm.style.display = "block";
@@ -34,14 +34,15 @@ async function loginUser() {
       },
       body: JSON.stringify({ identifier, password }),
     });
-    console.log(response);
 
     if (response.ok) {
       const result = await response.json();
-      if (result.user.role == 3) {
+      console.log(result);
+
+      if (result.user.role == "students") {
         alert(`Welcome to Student Dashboard, ${result.user.name}!`);
         window.location.href = "/dashboard/students";
-      } else if (result.user.role == 2) {
+      } else if (result.user.role == "admin") {
         alert(`Welcome to Admin Dashboard, ${result.user.name}!`);
         window.location.href = "/dashboard/admin";
       }
@@ -84,9 +85,10 @@ async function registerUser(e) {
     });
 
     if (request.ok) {
-      const response = await request.json();
+      const result = await request.json();
+      console.log(result);
 
-      if (result.user.role === "student") {
+      if (result.user.role === "students") {
         alert(`Welcome to Student Dashboard, ${result.user.name}!`);
         window.location.href = "/dashboard/students";
       } else if (result.user.role === "admin") {
@@ -95,7 +97,6 @@ async function registerUser(e) {
       } else {
         alert("Unknown role. Please contact support.");
       }
-
     } else {
       const errorText = await request.text();
       alert(`Failed to register: ${errorText}`);

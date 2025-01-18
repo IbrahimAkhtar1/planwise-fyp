@@ -1,9 +1,11 @@
+from functools import wraps
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from flask_login import UserMixin, LoginManager, login_user, login_required
+from flask_login import UserMixin, LoginManager, login_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
+from flask_migrate import Migrate
 
 # App Initialization
 app = Flask(__name__)
@@ -13,11 +15,15 @@ app.secret_key = "planwise"
 # Login Manager
 login_manager = LoginManager(app)
 login_manager.login_view = '/'
+# login_manager.login_view = 'signin'
+
 
 # Configure SQLAlchemy
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI', 'mysql://root@localhost/planwise_db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+# migrate db automatically
+migrate = Migrate(app, db)
 
 # User Model
 class Users(UserMixin, db.Model):
@@ -30,7 +36,7 @@ class Users(UserMixin, db.Model):
     status = db.Column(db.Boolean, default=True)
 
     # Define relationship to UsersRoles
-    # role = db.relationship('UsersRoles', backref='users', lazy=True)
+    role = db.relationship('UsersRoles', backref='users', lazy=True)
 
 class UsersRoles(db.Model):
     __tablename__ = 'users_roles'
@@ -41,6 +47,19 @@ class UsersRoles(db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     return Users.query.get(int(user_id))
+
+# Role-based access control function
+def role_required(role):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            print(f"Checking role for {current_user.role.role}")  # Debugging line
+            if not current_user.is_authenticated or current_user.role.role != role:
+                print(f"Access denied for {current_user.username}")  # Debugging line
+                return render_template('./index.html')
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
 
 # Routes
 @app.route('/')
@@ -54,6 +73,8 @@ def default():
 def signup():
     try:
         data = request.get_json()
+        app.logger.info(f"Received data: {data}")
+
         name = data.get('name')
         username = data.get('username')
         password = data.get('password')
@@ -93,10 +114,7 @@ def signup():
                 "id": new_user.id,
                 "name": new_user.name,
                 "username": new_user.username,
-                "role": {
-                    "id": role.id,
-                    "name": role.role_name  # Assuming `role_name` is an attribute in `UsersRoles`
-                },
+                "role": role.role,
                 "status": new_user.status
             }
         }), 201
@@ -105,7 +123,6 @@ def signup():
         # Log the error for debugging purposes
         app.logger.error(f"Signup error: {e}")
         return jsonify({"error": "An error occurred during registration"}), 500
-
 
 @app.route('/signin', methods=['POST'])
 def signin():
@@ -123,7 +140,8 @@ def signin():
             login_user(user)
 
             # Fetch role name based on ur_id
-            # role = UsersRoles.query.get(user.ur_id).role if UsersRoles.query.get(user.ur_id) else "Unknown"
+            role_obj = UsersRoles.query.get(user.ur_id)
+            role = role_obj.role if role_obj else "Unknown"  # Correct way to access role attribute
 
             return jsonify({
                 "message": "Login successful",
@@ -131,7 +149,7 @@ def signin():
                     "id": user.id,
                     "name": user.name,
                     "username": user.username,
-                    "role": user.ur_id,  # Return role name instead of ID
+                    "role": role,  # Returning role name directly
                     "status": user.status
                 }
             }), 200
@@ -142,17 +160,28 @@ def signin():
         app.logger.error(f"Signin error: {e}")
         return jsonify({"error": "An error occurred during login"}), 500
 
+from flask_login import logout_user
 
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('default'))  # Redirect to the root (sign-in) page
 
+# @app.route('/dashboard/admin', endpoint='admin_dashboard')
 @app.route('/dashboard/admin')
-# @login_required
+@login_required
+@role_required('admin')
 def dashboard_admin():
     return render_template('panels/admin/index.html')
 
+# @app.route('/dashboard/students', endpoint='student_dashboard')
 @app.route('/dashboard/students')
-# @login_required
+@login_required
+@role_required('students')
 def dashboard_student():
     return render_template('panels/students/index.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
