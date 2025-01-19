@@ -15,7 +15,7 @@ login_manager = LoginManager(app)
 login_manager.login_view = '/'
 
 # Configure SQLAlchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI', 'mysql://root@localhost/planwise_db')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI','mysql://root@localhost/planwise_db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
