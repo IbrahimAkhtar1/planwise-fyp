@@ -14,9 +14,7 @@ endblock title %} {% block body %}
   <aside class="sidebar">
     <div class="sidebar-logo">
       <img
-        src="./../../assets/images/logo.png"
-        alt="PlanWise Logo"
-        class="logo-img"
+       src="{{ url_for('static', filename='assets/images/logo.png') }}" alt="Logo" class="logo-img"
       />
     </div>
     <ul class="sidebar-menu">
@@ -100,7 +98,7 @@ endblock title %} {% block body %}
 </div>
 
 {% endblock body %} {% block scripts %}
-<script src="{{ url_for('static', filename='js/menu.js') }}"></script>
+
 <script src="{{ url_for('static', filename='js/data.js') }}"></script>
 <script src="{{ url_for('static', filename='js/student.js') }}"></script>
 {% endblock scripts %}

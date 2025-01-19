@@ -7,164 +7,155 @@
   rel="stylesheet"
   href="{{ url_for('static', filename='./css/admin.css') }}"
 />
-{% endblock css %} 
-
-{% block title %} Home | Admin Dashboard | PlanWise{% endblock title %}
-
-{% block body %}
+{% endblock css %} {% block title %} Home | Admin Dashboard | PlanWise{%
+endblock title %} {% block body %}
 <div class="wrapper">
-      <!-- Sidebar -->
-      <div class="sidebar">
-        <div class="sidebar-logo">
-          <img
-            src="./../../assets/images/logo.png"
-            alt="Logo"
-            class="logo-img"
-          />
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <img src="./../../assets/images/logo.png" alt="Logo" class="logo-img" />
+    </div>
+    <ul class="sidebar-menu">
+      <li>
+        <a href="#" onclick="showSection('dashboardSection')">Dashboard</a>
+      </li>
+      <li>
+        <a href="#" onclick="showSection('manageStudentsSection')"
+          >Manage Students</a
+        >
+      </li>
+      <li>
+        <a href="#" onclick="showSection('uploadDateSheetSection')"
+          >Upload Date Sheet</a
+        >
+      </li>
+      <li>
+        <a href="#" onclick="showSection('clashesDetectionSection')"
+          >Clashes Detection</a
+        >
+      </li>
+      <li>
+        <a href="#" onclick="showSection('reportSection')">Reports</a>
+      </li>
+      <li>
+        <a href="#" onclick="showSection('settingsSection')">Settings</a>
+      </li>
+    </ul>
+    <button class="btn logout-btn">Logout</button>
+
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <header>
+      <h1>Welcome, Admin</h1>
+    </header>
+
+    <div class="dashboard-section" id="dashboardSection">
+      <h2>Dashboard Overview</h2>
+      <div class="key-metrics">
+        <div class="metric">
+          <h3>Total Students</h3>
+          <p id="totalStudentsCount">150</p>
         </div>
-        <ul class="sidebar-menu">
-          <li>
-            <a href="#" onclick="showSection('dashboardSection')">Dashboard</a>
-          </li>
-          <li>
-            <a href="#" onclick="showSection('manageStudentsSection')"
-              >Manage Students</a
-            >
-          </li>
-          <li>
-            <a href="#" onclick="showSection('uploadDateSheetSection')"
-              >Upload Date Sheet</a
-            >
-          </li>
-          <li>
-            <a href="#" onclick="showSection('clashesDetectionSection')"
-              >Clashes Detection</a
-            >
-          </li>
-          <li>
-            <a href="#" onclick="showSection('reportSection')">Reports</a>
-          </li>
-          <li>
-            <a href="#" onclick="showSection('settingsSection')">Settings</a>
-          </li>
-        </ul>
-        <button class="logout-btn" id="logoutBtn">Logout</button>
+        <div class="metric">
+          <h3>Total Courses</h3>
+          <p id="totalCoursesCount">10</p>
+        </div>
+        <div class="metric">
+          <h3>Upcoming Exams</h3>
+          <p id="upcomingExamsCount">5</p>
+        </div>
       </div>
+      <p>
+        Welcome to the admin dashboard. Choose an option from the menu to
+        proceed.
+      </p>
+    </div>
 
-      <!-- Main Content -->
-      <div class="main-content">
-        <header>
-          <h1>Welcome, Admin</h1>
-        </header>
-
-        <div class="dashboard-section" id="dashboardSection">
-          <h2>Dashboard Overview</h2>
-          <div class="key-metrics">
-            <div class="metric">
-              <h3>Total Students</h3>
-              <p id="totalStudentsCount">150</p>
-            </div>
-            <div class="metric">
-              <h3>Total Courses</h3>
-              <p id="totalCoursesCount">10</p>
-            </div>
-            <div class="metric">
-              <h3>Upcoming Exams</h3>
-              <p id="upcomingExamsCount">5</p>
-            </div>
-          </div>
-          <p>
-            Welcome to the admin dashboard. Choose an option from the menu to
-            proceed.
-          </p>
-        </div>
-
-        <!-- Additional Sections (hidden by default) -->
-        <div id="manageStudentsSection" style="display: none">
-          <h2>Manage Students</h2>
-          <form id="studentForm">
-            <input
-              type="text"
-              class="input-field"
-              id="studentName"
-              placeholder="Enter Student Name"
-              required
-            />
-            <input type="submit" class="submit" value="Add Student" />
-          </form>
-          <div class="enrolled-students">
-            <h3>Enrolled Students List:</h3>
-            <ul id="studentList"></ul>
-          </div>
-        </div>
-
-        <!-- Upload Date Sheet Section -->
-        <div id="uploadDateSheetSection" style="display: none">
-          <h2>Upload Exam Date Sheet</h2>
-          <form id="uploadForm">
-            <div class="input-box">
-              <input
-                type="file"
-                class="input-field"
-                id="dateSheetFile"
-                accept=".csv"
-                required
-              />
-            </div>
-            <input type="submit" class="submit" value="Upload" />
-          </form>
-          <div class="uploaded-datesheet">
-            <h3>Uploaded Date Sheet:</h3>
-            <ul id="examList"></ul>
-          </div>
-        </div>
-
-        <!-- Clashes Detection Section -->
-        <div id="clashesDetectionSection" style="display: none">
-          <h2>Clashes Detection</h2>
-          <button class="submit" id="detectClashesBtn">Detect Clashes</button>
-          <div class="exam-clashes">
-            <h3>Detected Exam Clashes:</h3>
-            <ul id="clashList"></ul>
-          </div>
-        </div>
-
-        <!-- Reports Section -->
-        <div id="reportSection" style="display: none">
-          <h2>Reports</h2>
-          <p>
-            Generate and view reports based on student performance and exam
-            statistics.
-          </p>
-          <button class="submit" id="generateReportBtn">Generate Report</button>
-          <div class="reports-list">
-            <h3>Generated Reports:</h3>
-            <ul id="reportsList"></ul>
-          </div>
-        </div>
-
-        <!-- Settings Section -->
-        <div id="settingsSection" style="display: none">
-          <h2>Settings</h2>
-          <form id="settingsForm">
-            <div class="input-box">
-              <label for="adminEmail">Admin Email:</label>
-              <input
-                type="email"
-                class="input-field"
-                id="adminEmail"
-                placeholder="Update Admin Email"
-                required
-              />
-            </div>
-            <input type="submit" class="submit" value="Update Settings" />
-          </form>
-        </div>
+    <!-- Additional Sections (hidden by default) -->
+    <div id="manageStudentsSection" style="display: none">
+      <h2>Manage Students</h2>
+      <form id="studentForm">
+        <input
+          type="text"
+          class="input-field"
+          id="studentName"
+          placeholder="Enter Student Name"
+          required
+        />
+        <input type="submit" class="submit" value="Add Student" />
+      </form>
+      <div class="enrolled-students">
+        <h3>Enrolled Students List:</h3>
+        <ul id="studentList"></ul>
       </div>
     </div>
-  {% endblock body %}
 
-  {% block scripts %}
-<script src="{{ url_for('static', filename='js/menu.js') }}"></script>
+    <!-- Upload Date Sheet Section -->
+    <div id="uploadDateSheetSection" style="display: none">
+      <h2>Upload Exam Date Sheet</h2>
+      <form id="uploadForm">
+        <div class="input-box">
+          <input
+            type="file"
+            class="input-field"
+            id="dateSheetFile"
+            accept=".csv"
+            required
+          />
+        </div>
+        <input type="submit" class="submit" value="Upload" />
+      </form>
+      <div class="uploaded-datesheet">
+        <h3>Uploaded Date Sheet:</h3>
+        <ul id="examList"></ul>
+      </div>
+    </div>
+
+    <!-- Clashes Detection Section -->
+    <div id="clashesDetectionSection" style="display: none">
+      <h2>Clashes Detection</h2>
+      <button class="submit" id="detectClashesBtn">Detect Clashes</button>
+      <div class="exam-clashes">
+        <h3>Detected Exam Clashes:</h3>
+        <ul id="clashList"></ul>
+      </div>
+    </div>
+
+    <!-- Reports Section -->
+    <div id="reportSection" style="display: none">
+      <h2>Reports</h2>
+      <p>
+        Generate and view reports based on student performance and exam
+        statistics.
+      </p>
+      <button class="submit" id="generateReportBtn">Generate Report</button>
+      <div class="reports-list">
+        <h3>Generated Reports:</h3>
+        <ul id="reportsList"></ul>
+      </div>
+    </div>
+
+    <!-- Settings Section -->
+    <div id="settingsSection" style="display: none">
+      <h2>Settings</h2>
+      <form id="settingsForm">
+        <div class="input-box">
+          <label for="adminEmail">Admin Email:</label>
+          <input
+            type="email"
+            class="input-field"
+            id="adminEmail"
+            placeholder="Update Admin Email"
+            required
+          />
+        </div>
+        <input type="submit" class="submit" value="Update Settings" />
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock body %} {% block scripts %}
 <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
 {% endblock scripts %}
