@@ -1,0 +1,9 @@
+flask
+flask_sqlalchemy
+flask_cors
+flask_login
+flask_migrate
+mysqlclient
+python-dotenv
+requests
+numpy

@@ -88,12 +88,12 @@ async function registerUser(e) {
       const result = await request.json();
       console.log(result);
 
-      if (result.user.role === "students") {
-        alert(`Welcome to Student Dashboard, ${result.user.name}!`);
-        window.location.href = "/dashboard/students";
-      } else if (result.user.role === "admin") {
-        alert(`Welcome to Admin Dashboard, ${result.user.name}!`);
-        window.location.href = "/dashboard/admin";
+      if (result.user.role === "students" || result.user.role === 3) {
+        alert(`Welcome to Student Dashboard, ${result.user.role}!`);
+        // window.location.href = "/dashboard/students";
+      } else if (result.user.role === "admin" || result.user.role === 1) {
+        alert(`Welcome to Admin Dashboard, ${result.user.role}!`);
+        // window.location.href = "/dashboard/admin";
       } else {
         alert("Unknown role. Please contact support.");
       }

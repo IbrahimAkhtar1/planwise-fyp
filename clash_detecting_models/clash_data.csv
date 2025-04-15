@@ -1,0 +1,6 @@
+course_code,course_name,schedule_start,schedule_end,type,credit,instructor,date
+CS101,Introduction to CS,2025-06-10 09:00,2025-06-10 11:00,Theory,3,Prof. A,2025-06-10
+MATH201,Calculus I,2025-06-10 10:00,2025-06-10 12:00,Theory,3,Prof. B,2025-06-10
+PHY101,Physics I,2025-06-10 12:30,2025-06-10 14:30,Theory,3,Prof. C,2025-06-10
+CS102,Data Structures,2025-06-11 09:00,2025-06-11 11:00,Theory,3,Prof. D,2025-06-11
+MATH202,Calculus II,2025-06-11 10:30,2025-06-11 12:30,Theory,3,Prof. E,2025-06-11
