@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 from functools import wraps
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
@@ -6,6 +7,8 @@ from flask_login import UserMixin, LoginManager, login_user, login_required, cur
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from flask_migrate import Migrate
+
+load_dotenv()  # Load .env file
 
 # App Initialization
 app = Flask(__name__)
@@ -19,7 +22,8 @@ login_manager.login_view = '/'
 
 
 # Configure SQLAlchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI','mysql://root@localhost/planwise_db')
+DATABASE_URL = os.getenv("DATABASE_URL")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI', DATABASE_URL)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 # migrate db automatically
