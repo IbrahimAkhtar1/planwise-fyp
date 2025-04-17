@@ -7,6 +7,8 @@ from flask_login import UserMixin, LoginManager, login_user, login_required, cur
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from flask_migrate import Migrate
+from collections import Counter
+
 
 load_dotenv()  # Load .env file
 
@@ -22,8 +24,7 @@ login_manager.login_view = '/'
 
 
 # Configure SQLAlchemy
-DATABASE_URL = os.getenv("DATABASE_URL")
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI', DATABASE_URL)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI','mysql://root@localhost/planwise_db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 # migrate db automatically
@@ -187,5 +188,43 @@ def dashboard_student():
     return render_template('panels/students/index.html')
 
 
+
+
+
+# Core clash detection & suggestion logic
+def detect_and_suggest_clashes(data):
+    students = data.get("students", {})
+    available_dates = data.get("available_dates", [])
+    result = {}
+
+    for student, dates in students.items():
+        date_counts = Counter(dates)
+        clashes = [date for date, count in date_counts.items() if count > 1]
+
+        suggestions = {}
+        for clash_date in clashes:
+            for alt_date in available_dates:
+                if alt_date not in dates:
+                    suggestions[clash_date] = alt_date
+                    break
+
+        result[student] = {
+            "original_dates": dates,
+            "clashes": clashes,
+            "suggestions": suggestions
+        }
+    return result
+
+@app.route('/check_dates', methods=['POST'])
+def check_dates():
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided!"}), 400
+
+    result = detect_and_suggest_clashes(data)
+    return jsonify(result)
+
+
+    
 if __name__ == '__main__':
     app.run(debug=True)
